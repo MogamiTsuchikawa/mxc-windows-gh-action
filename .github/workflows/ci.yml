@@ -35,7 +35,7 @@ jobs:
             throw 'MinGit BusyBox SHA-256 mismatch.'
           }
           Expand-Archive -LiteralPath $archive -DestinationPath artifacts/publish/tools/MinGitBusyBox
-          Copy-Item -LiteralPath README.md,LICENSE,THIRD_PARTY_NOTICES.md -Destination artifacts/publish/
+          Copy-Item -LiteralPath README.md,README.ja.md,GET_STARTED.md,GET_STARTED.ja.md,LICENSE,THIRD_PARTY_NOTICES.md -Destination artifacts/publish/
           Copy-Item -LiteralPath docs,examples -Destination artifacts/publish/ -Recurse
       - uses: actions/upload-artifact@v7
         with:

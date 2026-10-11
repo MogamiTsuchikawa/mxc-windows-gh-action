@@ -67,4 +67,15 @@ dotnet publish src/Mxc.GitHubRunner -c Release --no-build --no-restore -o artifa
 
 ジョブ結果を GitHub Actions の実行ページで確認し、ホストではランナーの終了、作業領域の削除、転送ログの保存を確認します。`keepWorkDirectory` は既定の `false` を使います。
 
-GitHub ホスト型ランナー上の CI 実行と ARM64 実機の確認は、このローカル検証の結果には含みません。
+ARM64 実機の確認は未実施です。
+
+## 公開リポジトリの CI
+
+2026-10-11（日本時間）、公開リポジトリの[初回 CI](https://github.com/MogamiTsuchikawa/mxc-windows-gh-action/actions/runs/38126101927) が成功しました。対象コミットは `99a6d6f` です。
+
+- GitHub ホスト型の Windows Server 2025、.NET SDK 10.0.401 を使用。
+- ロックされた依存関係の復元、Release ビルド、自動テスト 108 件が成功（失敗・スキップなし）。
+- framework-dependent CLI の publish、SHA-256 検証済み MinGit BusyBox と説明書・ライセンスの同梱が成功。
+- Windows 配布物と TRX テスト結果のアップロードが成功。ログ内の警告・エラー注記なし。
+
+この CI はビルドと自動テストを対象とし、ネイティブ MXC の `smoke` やセルフホストランナーの実ジョブは実行しません。MXC の実動作確認は上記の対応ホストで行っています。
