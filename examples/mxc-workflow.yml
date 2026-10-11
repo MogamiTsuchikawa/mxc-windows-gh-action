@@ -1,0 +1,36 @@
+name: MXC runner check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: [self-hosted, Windows, X64, mxc]
+    timeout-minutes: 10
+    steps:
+      - name: Verify environment
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Write-Output "Runner: $env:RUNNER_NAME"
+          Write-Output "Workspace: $env:GITHUB_WORKSPACE"
+          if ($env:MXC_GITHUB_TOKEN -or $env:MXC_RUNNER_REGISTRATION_TOKEN) {
+            throw 'Unexpected host credential variable'
+          }
+          dotnet --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $result = Join-Path $env:RUNNER_TEMP 'mxc-result.txt'
+          'Hello from a GitHub Actions job inside MXC.' | Set-Content $result
+          Get-Content $result
+      - name: Build and run C# inside MXC
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $project = Join-Path $env:RUNNER_TEMP 'mxc-csharp-check'
+          dotnet new console --framework net10.0 --output $project
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet run --project $project --no-restore
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

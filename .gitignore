@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+.vs/
+TestResults/
+.mxc-runner/
+mxc-runner.json
+artifacts/
+*.user

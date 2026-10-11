@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "Microsoft.Mxc.Sdk": {
+        "type": "Direct",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "3gLupZbnt4YnDTqjuM5M0Cj3NEpGlRHddPPoBYHJ1mDMvEe5h4OhgjsVos+A7kus/LLEFxWJlPoqL7JGhGQJmg=="
+      }
+    }
+  }
+}

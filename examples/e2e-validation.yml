@@ -1,0 +1,41 @@
+name: MXC end-to-end validation
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: [self-hosted, Windows, X64, mxc]
+    timeout-minutes: 10
+    steps:
+      - name: Checkout private repository using JavaScript action
+        uses: actions/checkout@v7.0.1
+      - name: Verify isolated runner environment
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $head = git rev-parse HEAD
+          if ($LASTEXITCODE -ne 0 -or $head.Trim() -ne $env:GITHUB_SHA) { throw 'Checkout SHA mismatch' }
+          if (-not (Test-Path .git)) { throw 'Git checkout missing' }
+          Write-Host "Runner: $env:RUNNER_NAME ($env:RUNNER_OS/$env:RUNNER_ARCH)"
+          Write-Host "Profile: $env:USERPROFILE"
+          if ($env:USERPROFILE -notmatch '\\runs\\[a-f0-9]{32}\\profile$') { throw 'Expected dedicated MXC profile' }
+          foreach ($name in @('MXC_GITHUB_TOKEN', 'MXC_RUNNER_REGISTRATION_TOKEN', 'ACTIONS_RUNNER_INPUT_TOKEN')) {
+            if ([Environment]::GetEnvironmentVariable($name)) { throw "Host bootstrap credential inherited: $name" }
+          }
+          $file = Join-Path $env:RUNNER_TEMP 'mxc-validation.txt'
+          'MXC workspace write succeeded' | Set-Content $file
+          if ((Get-Content $file) -ne 'MXC workspace write succeeded') { throw 'File check failed' }
+          git --version
+          if ($LASTEXITCODE -ne 0) { throw 'git failed' }
+      - name: Build and execute C# inside MXC
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          dotnet new console --framework net10.0 --output hello
+          if ($LASTEXITCODE -ne 0) { throw 'dotnet new failed' }
+          $output = dotnet run --project hello
+          if ($LASTEXITCODE -ne 0 -or ($output -join ' ') -notmatch 'Hello, World!') { throw 'C# execution failed' }
+          Write-Host $output
+          '## MXC validation succeeded' >> $env:GITHUB_STEP_SUMMARY
+          'Ephemeral Windows runner, isolated profile, clean bootstrap environment, filesystem I/O, JavaScript checkout action, Git and C# build all passed.' >> $env:GITHUB_STEP_SUMMARY

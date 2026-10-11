@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/OWNER/REPO",
+  "runnerVersion": "latest",
+  "architecture": "x64",
+  "stateDirectory": ".mxc-runner",
+  "namePrefix": "mxc",
+  "labels": ["mxc"],
+  "toolPaths": [],
+  "timeoutMinutes": 120,
+  "keepWorkDirectory": false
+}

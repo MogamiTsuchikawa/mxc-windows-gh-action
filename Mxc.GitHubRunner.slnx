@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Mxc.GitHubRunner/Mxc.GitHubRunner.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Mxc.GitHubRunner.Tests/Mxc.GitHubRunner.Tests.csproj" />
+  </Folder>
+</Solution>
